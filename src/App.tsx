@@ -1,49 +1,56 @@
 import { useState } from 'react';
 import { Car, Ship, Phone, Mail, CheckCircle, Star, ArrowRight, MapPin, Clock, Facebook, Instagram, Twitter, ChevronLeft, ChevronRight } from 'lucide-react';
 
+
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
   
-  const beforeAfterImages = [
+  const detailingImages = [
     {
-      before: "https://images.pexels.com/photos/164634/pexels-photo-164634.jpeg?auto=compress&cs=tinysrgb&w=800",
-      after: "https://images.pexels.com/photos/210019/pexels-photo-210019.jpeg?auto=compress&cs=tinysrgb&w=800",
-      title: "Luxury Car Detail"
+      image: "/boat1.png",
+      title: "Professional Boat Detailing"
     },
     {
-      before: "https://images.pexels.com/photos/3752169/pexels-photo-3752169.jpeg?auto=compress&cs=tinysrgb&w=800",
-      after: "https://images.pexels.com/photos/163236/luxury-yacht-boat-speed-water-163236.jpeg?auto=compress&cs=tinysrgb&w=800",
-      title: "Boat Detailing"
+      image: "/boat2.png",
+      title: "Premium Boat Care"
     },
     {
-      before: "https://images.pexels.com/photos/1519088/pexels-photo-1519088.jpeg?auto=compress&cs=tinysrgb&w=800",
-      after: "https://images.pexels.com/photos/3752169/pexels-photo-3752169.jpeg?auto=compress&cs=tinysrgb&w=800",
-      title: "SUV Interior Detail"
+      image: "/boat3.png",
+      title: "Expert Marine Detailing"
     },
     {
-      before: "https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=800",
-      after: "https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?auto=compress&cs=tinysrgb&w=800",
-      title: "Classic Car Restoration"
+      image: "/boat4.png",
+      title: "Luxury Boat Restoration"
+    },
+    {
+      image: "/car1.png",
+      title: "Ford Raptor detail"
+    },
+    {
+      image: "/car2.png",
+      title: "Tesla transformation"
+    },
+    {
+      image: "/car3.png",
+      title: "Paint Protection & Gloss Enhancement"
     }
   ];
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % beforeAfterImages.length);
+    setCurrentSlide((prev) => (prev + 1) % detailingImages.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + beforeAfterImages.length) % beforeAfterImages.length);
+    setCurrentSlide((prev) => (prev - 1 + detailingImages.length) % detailingImages.length);
   };
 
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
-    phone: '',
-    service: 'car',
-    make: '',
-    model: '',
+    makeModel: '',
     location: '',
-    message: ''
+    serviceDetails: '',
+    phone: '',
+    email: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -59,34 +66,30 @@ function App() {
         },
         body: JSON.stringify({
           name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          service: formData.service,
-          make: formData.make,
-          model: formData.model,
+          makeModel: formData.makeModel,
           location: formData.location,
-          message: formData.message,
+          serviceDetails: formData.serviceDetails,
+          phone: formData.phone,
+          email: formData.email,
           _subject: `New Quote Request from ${formData.name}`,
           _replyto: formData.email
         })
       });
 
-      if (formspreeResponse.ok) {
-        setIsSubmitted(true);
-        setTimeout(() => {
-          setIsSubmitted(false);
-          setFormData({
-            name: '',
-            email: '',
-            phone: '',
-            service: 'car',
-            make: '',
-            model: '',
-            location: '',
-            message: ''
-          });
-        }, 5000);
-      }
+          if (formspreeResponse.ok) {
+            setIsSubmitted(true);
+            setTimeout(() => {
+              setIsSubmitted(false);
+              setFormData({
+                name: '',
+                makeModel: '',
+                location: '',
+                serviceDetails: '',
+                phone: '',
+                email: ''
+              });
+            }, 5000);
+          }
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('There was an error submitting your quote request. Please try again or call us directly.');
@@ -99,96 +102,126 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Sticky Navigation */}
+      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#0a0e2e]/95 backdrop-blur">
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-white md:gap-6 lg:gap-8 lg:justify-between">
+            <div className="flex items-center gap-4 md:gap-6">
+              <img src="/image-removebg-preview.png" alt="Startt Detailing" className="h-20 w-auto md:h-24" />
+              <button
+                onClick={(event) => {
+                  event.preventDefault();
+                  const formSection = document.querySelector('#quote');
+                  if (formSection) {
+                    formSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-[#43c4f4] to-[#74dbff] px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.35em] text-[#05122b] shadow-lg shadow-[#2ca9e7]/30 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#2ca9e7]/40"
+              >
+                Get A Quote
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </button>
+            </div>
+            <a
+              href="tel:9132001495"
+              className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-white/90 transition-all duration-300 hover:border-[#74dbff]/60 hover:bg-white/10 hover:text-white"
+            >
+              <Phone className="h-4 w-4" />
+              <span className="border-b border-white/60 pb-0.5 text-[#74dbff] transition-colors duration-300 group-hover:text-white">
+                302 943-0217
+              </span>
+            </a>
+            <span className="w-full rounded-full border border-white/10 bg-white/5 px-6 py-2 text-center text-[10px] font-semibold uppercase tracking-[0.45em] text-white/70 backdrop-blur md:w-auto md:text-xs">
+              Luxury Detailing | Delaware
+            </span>
+            <div className="flex items-center gap-4 text-white">
+              <a
+                href="https://www.instagram.com/starttdetailing/profilecard/?igsh=MXBwbTBtYWx4ZzE5ag%3D%3D"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 transition-all duration-300 hover:border-[#74dbff]/60 hover:bg-[#74dbff]/10 hover:text-[#74dbff]"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/profile.php?id=61576313614895&mibextid=wwXIfr&rdid=S7cFM2R1NUcjYdo0&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1GWUZUAU9m%2F%3Fmibextid%3DwwXIfr#"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 transition-all duration-300 hover:border-[#74dbff]/60 hover:bg-[#74dbff]/10 hover:text-[#74dbff]"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
       <header className="relative min-h-screen bg-cover bg-center text-white overflow-hidden" style={{
-        backgroundImage: 'linear-gradient(rgba(10, 14, 46, 0.85), rgba(10, 14, 46, 0.85)), url(https://images.unsplash.com/photo-1601362840469-51e4d8d58785?w=1600)'
+        backgroundImage: 'linear-gradient(rgba(10, 14, 46, 0.90), rgba(10, 14, 46, 0.90)), url(https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1600)'
       }}>
-        <nav className="relative z-10 container mx-auto px-6 py-6 flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <img src="/image-removebg-preview.png" alt="Startt Detailing" className="h-20 w-auto" />
-          </div>
-          <a
-            href="#quote"
-            className="bg-white text-[#0a0e2e] px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-          >
-            Get Free Quote
-          </a>
-        </nav>
-
         <div className="relative z-10 container mx-auto px-6 py-20 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Hero Content */}
             <div>
               {/* Star Rating */}
-              <div className="flex items-center gap-2 mb-6">
-                <div className="flex">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="flex gap-0.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-6 h-6 fill-yellow-400 text-yellow-400" />
+                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
-                <span className="text-lg font-medium">5.0 from 30+ reviews</span>
+                <span className="text-base font-semibold tracking-wide">5.0 · 30+ Reviews</span>
               </div>
 
               {/* Subheading */}
-              <p className="text-xl md:text-2xl text-gray-300 mb-4 font-medium">
+              <p className="text-lg md:text-xl text-gray-400 mb-6 font-light tracking-wide uppercase">
                 Professional Detailing Services in Sussex County
               </p>
 
               {/* Main Headline */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-8 tracking-tight">
                 Get a Fast, Free Detailing Quote
               </h1>
 
               {/* Description */}
-              <p className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed">
+              <p className="text-base md:text-lg text-gray-300 mb-10 leading-relaxed max-w-xl">
                 Your Trusted Partner for Professional Detailing – We Detail Anything and Everything. Cars, Boats, RVs, Motorcycles, and More. Explore Affordable Solutions, Protect Your Investment, and Request a No-Obligation Quote in Just Minutes.
               </p>
 
               {/* Testimonial */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                <div className="flex items-start gap-4">
-                  <div className="w-14 h-14 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden">
-                    <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center text-white text-xl font-bold">
-                      MJ
-                    </div>
+              <div className="bg-white/5 backdrop-blur-md rounded-xl p-8 border border-white/10 shadow-2xl">
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex-shrink-0 flex items-center justify-center text-white text-lg font-bold shadow-lg">
+                    MJ
                   </div>
                   <div>
-                    <p className="text-base md:text-lg text-white mb-3 italic leading-relaxed">
+                    <p className="text-base md:text-lg text-gray-100 mb-4 leading-relaxed font-light">
                       "The team at Startt Detailing transformed my boat! It looks better than the day I bought it. They're incredibly thorough and professional."
                     </p>
-                    <p className="text-sm text-gray-300 font-medium">– Michael J.</p>
+                    <p className="text-sm text-gray-400 font-semibold tracking-wide">— Michael J.</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right Column - Before/After Slideshow */}
+            {/* Right Column - Detailing Slideshow */}
             <div className="relative">
-              <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-                {/* Before Image - Top Half */}
-                <div className="relative h-64 md:h-80">
+              <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-200">
+                {/* Detailing Image */}
+                <div className="relative h-96 md:h-[600px]">
                   <img
-                    src={beforeAfterImages[currentSlide].before}
-                    alt="Before detailing"
+                    src={detailingImages[currentSlide].image}
+                    alt={detailingImages[currentSlide].title}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-4 left-4 bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                    BEFORE
-                  </div>
-                </div>
-                
-                {/* Divider */}
-                <div className="relative h-1 bg-gradient-to-r from-red-500 via-gray-300 to-green-500"></div>
-                
-                {/* After Image - Bottom Half */}
-                <div className="relative h-64 md:h-80">
-                  <img
-                    src={beforeAfterImages[currentSlide].after}
-                    alt="After detailing"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                    AFTER
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                  <div className="absolute bottom-8 left-8 right-8">
+                    <h3 className="text-white text-xl md:text-2xl font-bold drop-shadow-2xl tracking-wide">
+                      {detailingImages[currentSlide].title}
+                    </h3>
                   </div>
                 </div>
               </div>
@@ -196,27 +229,27 @@ function App() {
               {/* Navigation Arrows */}
               <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#0a0e2e] p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-10"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white text-[#0a0e2e] p-3.5 rounded-full shadow-xl transition-all duration-300 hover:scale-105 z-10 border border-gray-200"
                 aria-label="Previous slide"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-[#0a0e2e] p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-10"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/95 hover:bg-white text-[#0a0e2e] p-3.5 rounded-full shadow-xl transition-all duration-300 hover:scale-105 z-10 border border-gray-200"
                 aria-label="Next slide"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-5 h-5" />
               </button>
 
               {/* Slide Indicators */}
-              <div className="flex justify-center gap-2 mt-4">
-                {beforeAfterImages.map((_, index) => (
+              <div className="flex justify-center gap-2 mt-6">
+                {detailingImages.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => setCurrentSlide(index)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      index === currentSlide ? 'w-8 bg-white' : 'w-2 bg-white/50'
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      index === currentSlide ? 'w-8 bg-white shadow-lg' : 'w-1.5 bg-white/40 hover:bg-white/60'
                     }`}
                     aria-label={`Go to slide ${index + 1}`}
                   >
@@ -224,334 +257,684 @@ function App() {
                 ))}
               </div>
 
-              {/* Title */}
-              <p className="text-center text-white text-lg font-semibold mt-3">
-                {beforeAfterImages[currentSlide].title}
-              </p>
+
             </div>
           </div>
         </div>
       </header>
 
-      {/* Customer Reviews Carousel */}
-      <section className="py-16 bg-gray-50 overflow-hidden">
-        <div className="container mx-auto px-6 mb-8">
-          <div className="text-center">
-            <div className="flex justify-center mb-3">
+      {/* Behind the Scenes */}
+      <section className="relative overflow-hidden bg-[#050a1f] py-24 text-white">
+        <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_top,_rgba(76,200,255,0.25),transparent_55%)]"></div>
+        <div className="container relative mx-auto flex flex-col gap-12 px-6 lg:flex-row lg:items-center">
+          <div className="max-w-xl">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-[#74dbff]">
+              On The Job
+            </span>
+            <h2 className="mt-6 text-4xl font-bold md:text-5xl">Behind the Scenes at Startt Detailing</h2>
+            <p className="mt-4 text-base text-gray-300 md:text-lg">
+              See the crew in action as they restore gloss, banish salt, and protect every surface.
+            </p>
+            <div className="mt-8 grid grid-cols-2 gap-4 text-sm text-gray-200 sm:text-base">
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+                <CheckCircle className="mb-3 h-6 w-6 text-[#74dbff]" />
+                <p className="font-semibold text-white">Signature Startt Finish</p>
+                <p className="mt-1 text-gray-300">Layered protection and mirror shine on every detail.</p>
+              </div>
+              <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+                <Clock className="mb-3 h-6 w-6 text-[#74dbff]" />
+                <p className="font-semibold text-white">Meticulous Process</p>
+                <p className="mt-1 text-gray-300">Document each step so clients see the care behind the service.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid flex-1 gap-6 lg:grid-cols-2">
+            <div className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur lg:col-span-2">
+              <div className="relative aspect-[9/16] w-full bg-black">
+                <video
+                  className="h-full w-full object-contain bg-black"
+                  controls
+                  playsInline
+                  poster="/boat2.png"
+                >
+                  <source src="/media/behind-the-scenes.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+              </div>
+              <div className="px-6 py-6">
+                <p className="text-sm uppercase tracking-[0.35em] text-[#74dbff]">Feature Reel</p>
+                <h3 className="mt-2 text-2xl font-semibold text-white">Luxury Yacht Detail</h3>
+                <p className="mt-1 text-sm text-gray-300">
+                  Shot on-site with Startt Detailing—let prospects watch the finish take shape while we walk through the service highlights.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Customer Reviews Collage */}
+      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container mx-auto px-6">
+          {/* Header with Stats */}
+          <div className="text-center mb-16">
+            <div className="flex justify-center items-center gap-2 mb-4">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-6 h-6 fill-yellow-400 text-yellow-400" />
               ))}
+              <span className="text-2xl font-bold text-[#0a0e2e] ml-2">5/5</span>
             </div>
-            <h2 className="text-3xl font-bold text-[#0a0e2e] mb-2">Loved by Our Customers</h2>
-            <p className="text-gray-600">See what people are saying about our detailing services</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#0a0e2e] mb-4">Loved by Our Customers</h2>
+            <p className="text-xl text-gray-600 mb-6">See what people are saying about our detailing services</p>
+            
+            {/* Social Proof Stats */}
+            <div className="flex flex-wrap justify-center gap-8 text-center max-w-3xl mx-auto">
+              <div className="flex items-center gap-2">
+                <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                <span className="text-gray-700 font-medium">50+ happy clients</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span className="text-gray-700 font-medium">100+ vehicles and boats detailed in 2025</span>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="relative">
-          <div className="flex animate-scroll gap-6" style={{
-            animation: 'scroll 40s linear infinite'
-          }}>
-            {[...Array(2)].map((_, setIndex) => (
-              <div key={setIndex} className="flex gap-6 shrink-0">
-                {/* Review 1 - Hannah Hastings */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "Joey detailed my car and did a great job! He definitely had his work cut out for him! From the normal wear and tear to the husky hair in the back…after his detail it looks brand new!"
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
-                      HH
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[#0a0e2e]">Hannah Hastings</div>
-                      <div className="text-sm text-gray-500">Car Owner</div>
-                    </div>
-                  </div>
+          {/* Featured Review Spotlight */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="bg-gradient-to-br from-[#0a0e2e] to-[#1a1e4e] rounded-2xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full -ml-24 -mb-24"></div>
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="bg-yellow-400 text-[#0a0e2e] px-3 py-1 rounded-full text-sm font-bold">⭐ Featured Review</span>
+                  <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3" /> Verified Client
+                  </span>
                 </div>
-
-                {/* Review 2 - Russell Gofus */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "I am truly impressed by Startt detailing and its owner Joey Startt. He presents himself and his business with true pride and professionalism. Used his services to fully detail our 2019 Bennington Pontoon boat!"
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
+                <div className="flex mb-6">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-xl md:text-2xl leading-relaxed mb-6 font-light">
+                  "I am truly impressed by Startt detailing and its owner Joey Startt. He presents himself and his business with <span className="font-semibold italic text-yellow-300">true pride and professionalism</span>. Used his services to fully detail our 2019 Bennington Pontoon boat!"
+                </p>
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white text-xl font-bold shadow-lg">
                       RG
                     </div>
                     <div>
-                      <div className="font-semibold text-[#0a0e2e]">Russell Gofus</div>
-                      <div className="text-sm text-gray-500">Boat Owner</div>
+                      <div className="font-bold text-lg">Russell Gofus</div>
+                      <div className="text-gray-300 text-sm">Boat Owner</div>
                     </div>
                   </div>
-                </div>
-
-                {/* Review 3 - Heather Jester */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "Joey was very informative and always communicated in a timely manner. His work was amazing and my husband loved his clean boat!!!"
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
-                      HJ
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[#0a0e2e]">Heather Jester</div>
-                      <div className="text-sm text-gray-500">Boat Owner</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 4 - Nicole DiGiacomo */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "Startt Detailing detailed my car and did an amazing job. Very impressed and I would highly recommend them!!"
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
-                      ND
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[#0a0e2e]">Nicole DiGiacomo</div>
-                      <div className="text-sm text-gray-500">Car Owner</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 5 - Craig Conner */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "Had Joey detail my 21 ft Robalo, and he did an excellent job. I would certainly recommend him and use him again. Came right on time and did a great job."
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
-                      CC
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[#0a0e2e]">Craig Conner</div>
-                      <div className="text-sm text-gray-500">Boat Owner</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 6 - Robert Riley */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "These guys are amazing! Hardworking, reliable, with a unique knowledge of various marine cleaning regimes and correct top notch products."
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
-                      RR
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[#0a0e2e]">Robert Riley</div>
-                      <div className="text-sm text-gray-500">Boat Owner</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 7 - Kamran Givpoor */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "Joey has been taking care of my Beneteau on a weekly basis, and his work is consistently good. He's dependable, detail-oriented, and corrects things that require correction without hesitation."
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
-                      KG
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[#0a0e2e]">Kamran Givpoor</div>
-                      <div className="text-sm text-gray-500">Boat Owner</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 8 - Patrick Bilbrough */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "Startt Detailing does weekly washes on my Jersey Cape Sweet Caroline and they do an excellent job. Highly recommend!"
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
-                      PB
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[#0a0e2e]">Patrick Bilbrough</div>
-                      <div className="text-sm text-gray-500">Boat Owner</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Review 9 - Tori Reed */}
-                <div className="bg-white rounded-xl shadow-lg p-6 w-80 shrink-0">
-                  <div className="flex mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">
-                    "Startt Detailing detailed my car before I sold it. They did a great job, I was very impressed!"
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-[#0a0e2e] flex items-center justify-center text-white font-bold mr-3">
-                      TR
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[#0a0e2e]">Tori Reed</div>
-                      <div className="text-sm text-gray-500">Car Owner</div>
-                    </div>
+                  <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+                    <div className="text-sm text-gray-300">Service</div>
+                    <div className="font-semibold">2019 Bennington Pontoon – Full Detail</div>
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* Reviews Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {/* Review 1 - Hannah Hastings */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> Verified
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "Joey detailed my car and did a great job! He definitely had his work cut out for him! From the normal wear and tear to the husky hair in the back…after his detail it <span className="font-semibold text-[#0a0e2e]">looks brand new!</span>"
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-blue-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Car className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Hannah Hastings</div>
+                    <div className="text-xs text-gray-500">Sussex County, DE</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">Car Interior Deep Clean</div>
+              </div>
+            </div>
+
+            {/* Review 2 - Heather Jester */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> Verified
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "Joey was very informative and always communicated in a timely manner. His work was <span className="font-semibold text-[#0a0e2e]">amazing</span> and my husband loved his clean boat!!!"
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-purple-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Ship className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Heather Jester</div>
+                    <div className="text-xs text-gray-500">Lewes, DE</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">Boat Full Detail</div>
+              </div>
+            </div>
+
+            {/* Review 3 - Nicole DiGiacomo */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> Verified
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "Startt Detailing detailed my car and did an <span className="font-semibold text-[#0a0e2e]">amazing job</span>. Very impressed and I would highly recommend them!!"
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-pink-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Car className="w-5 h-5 text-pink-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Nicole DiGiacomo</div>
+                    <div className="text-xs text-gray-500">Rehoboth Beach, DE</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">Car Exterior & Interior Detail</div>
+              </div>
+            </div>
+
+            {/* Review 4 - Craig Conner */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> Verified
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "Had Joey detail my 21 ft Robalo, and he did an <span className="font-semibold text-[#0a0e2e]">excellent job</span>. I would certainly recommend him and use him again. Came right on time and did a great job."
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-orange-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Ship className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Craig Conner</div>
+                    <div className="text-xs text-gray-500">Bethany Beach, DE</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">21 ft Robalo – Full Detail</div>
+              </div>
+            </div>
+
+            {/* Review 5 - Robert Riley */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> Verified
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "These guys are <span className="font-semibold text-[#0a0e2e]">amazing!</span> Hardworking, reliable, with a unique knowledge of various marine cleaning regimes and correct top notch products."
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-teal-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Ship className="w-5 h-5 text-teal-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Robert Riley</div>
+                    <div className="text-xs text-gray-500">Ocean View, DE</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">Marine Detailing Services</div>
+              </div>
+            </div>
+
+            {/* Review 6 - Kamran Givpoor */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> Verified
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "Joey has been taking care of my Beneteau on a weekly basis, and his work is <span className="font-semibold text-[#0a0e2e]">consistently good</span>. He's dependable, detail-oriented, and corrects things that require correction without hesitation."
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-indigo-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Ship className="w-5 h-5 text-indigo-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Kamran Givpoor</div>
+                    <div className="text-xs text-gray-500">Fenwick Island, DE</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">Beneteau – Weekly Maintenance</div>
+              </div>
+            </div>
+
+            {/* Review 7 - Patrick Bilbrough */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> Verified
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "Startt Detailing does weekly washes on my Jersey Cape Sweet Caroline and they do an <span className="font-semibold text-[#0a0e2e]">excellent job</span>. Highly recommend!"
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-red-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Ship className="w-5 h-5 text-red-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Patrick Bilbrough</div>
+                    <div className="text-xs text-gray-500">Dewey Beach, DE</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">Jersey Cape – Weekly Washes</div>
+              </div>
+            </div>
+
+            {/* Review 8 - Tori Reed */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold flex items-center gap-1">
+                  <CheckCircle className="w-3 h-3" /> Verified
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "Startt Detailing detailed my car before I sold it. They did a <span className="font-semibold text-[#0a0e2e]">great job</span>, I was very impressed!"
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-yellow-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Car className="w-5 h-5 text-yellow-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Tori Reed</div>
+                    <div className="text-xs text-gray-500">Millsboro, DE</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">Pre-Sale Car Detail</div>
+              </div>
+            </div>
+
+            {/* Review 9 - Drew Mayhall */}
+            <div className="bg-white rounded-xl shadow-sm hover:shadow-2xl transition-all duration-300 p-6 border border-gray-100 hover:border-[#0a0e2e]/20 hover:-translate-y-1 group">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-semibold">
+                  Google Review
+                </span>
+              </div>
+              <p className="text-gray-800 mb-4 leading-relaxed text-base">
+                "Had this company come out to detail my 28ft Regulator. Let&apos;s just say I have not paid attention to the polish and wax like I should have. These guys showed up on time and did an <span className="font-semibold text-[#0a0e2e]">amazing job</span>. The boat looks new again. They were very professional, easy to work with, and charged me exactly what I was quoted. I will definitely be using this young man from now on."
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-white border-2 border-cyan-500 flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                    <Ship className="w-5 h-5 text-cyan-500" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-[#0a0e2e] text-sm">Drew Mayhall</div>
+                    <div className="text-xs text-gray-500">Sussex County, Delaware</div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <div className="text-xs text-gray-500 font-medium">28ft Regulator – Full Polish &amp; Wax</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Services Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-6">
+          {/* Headline & Subheadline */}
           <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-[#0a0e2e] mb-4">Our Services</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Professional detailing packages tailored to your vehicle's needs
+            <h2 className="text-4xl md:text-5xl font-bold text-[#0a0e2e] mb-4">Premium Mobile Detailing Services</h2>
+            <div className="flex flex-wrap justify-center items-center gap-4 text-lg text-gray-600 mb-3">
+              <span className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span className="font-semibold">Licensed</span>
+              </span>
+              <span className="text-gray-400">•</span>
+              <span className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span className="font-semibold">Insured</span>
+              </span>
+              <span className="text-gray-400">•</span>
+              <span className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-green-500" />
+                <span className="font-semibold">Trusted</span>
+              </span>
+            </div>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Precision detailing tailored to your lifestyle — on land and sea
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Car Detailing */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="bg-[#0a0e2e] p-8 text-white">
-                <Car className="w-12 h-12 mb-4" />
-                <h3 className="text-3xl font-bold mb-2">Car Detailing</h3>
-                <p className="text-gray-300">Complete interior and exterior care</p>
-              </div>
-              <div className="p-8">
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-[#0a0e2e] mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Premium hand wash & wax</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-[#0a0e2e] mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Deep interior cleaning & conditioning</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-[#0a0e2e] mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Paint correction & ceramic coating</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-[#0a0e2e] mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Engine bay detailing</span>
-                  </li>
-                </ul>
-                <a
-                  href="#quote"
-                  className="block w-full bg-[#0a0e2e] text-white text-center px-6 py-4 rounded-lg font-semibold hover:bg-[#151a42] transition-all duration-300"
-                >
-                  Request Car Detailing Quote
-                </a>
-              </div>
-            </div>
-
-            {/* Boat Detailing */}
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-              <div className="bg-[#0a0e2e] p-8 text-white">
-                <Ship className="w-12 h-12 mb-4" />
-                <h3 className="text-3xl font-bold mb-2">Boat Detailing</h3>
-                <p className="text-gray-300">Marine-grade care for your vessel</p>
-              </div>
-              <div className="p-8">
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-[#0a0e2e] mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Hull cleaning & waxing</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-[#0a0e2e] mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Deck & upholstery restoration</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-[#0a0e2e] mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Metal polishing & oxidation removal</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckCircle className="w-6 h-6 text-[#0a0e2e] mr-3 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Marine-grade protection treatments</span>
-                  </li>
-                </ul>
-                <a
-                  href="#quote"
-                  className="block w-full bg-[#0a0e2e] text-white text-center px-6 py-4 rounded-lg font-semibold hover:bg-[#151a42] transition-all duration-300"
-                >
-                  Request Boat Detailing Quote
-                </a>
+          {/* Trust Banner Card */}
+          <div className="max-w-6xl mx-auto mb-16">
+            <div className="bg-gradient-to-br from-[#0a0e2e] to-[#1a1e4e] rounded-2xl p-8 md:p-10 text-white shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-48 -mt-48"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mb-32"></div>
+              
+              <div className="relative z-10">
+                <div className="grid md:grid-cols-2 gap-8 items-center">
+                  <div>
+                    <h3 className="text-3xl font-bold mb-4">Startt Detailing</h3>
+                    <p className="text-lg text-gray-200 leading-relaxed mb-6">
+                      Fully licensed and insured professionals providing mobile detailing for boats, autos, RVs, and more. Our team brings showroom-level shine right to your location.
+                    </p>
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                      <span className="text-yellow-400 font-semibold">Rated 5.0 by Local Clients</span>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                          <CheckCircle className="w-6 h-6 text-green-400" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-lg">Licensed & Insured</div>
+                          <div className="text-sm text-gray-300">Full liability coverage</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
+                          <CheckCircle className="w-6 h-6 text-blue-400" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-lg">Professional Grade Equipment</div>
+                          <div className="text-sm text-gray-300">Premium products & tools</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-yellow-500/20 rounded-full flex items-center justify-center">
+                          <Star className="w-6 h-6 text-yellow-400" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-lg">Satisfaction Guaranteed</div>
+                          <div className="text-sm text-gray-300">100% quality promise</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Social Proof */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-[#0a0e2e] mb-4">Trusted by 500+ Happy Customers</h2>
-              <p className="text-gray-600">Join our growing community of satisfied vehicle and boat owners</p>
+          {/* Service Grid - 2x2 */}
+          <div className="max-w-6xl mx-auto mb-12">
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Auto Detailing */}
+              <div className="bg-white rounded-2xl border-2 border-gray-200 hover:border-[#0a0e2e] transition-all duration-300 overflow-hidden group hover:shadow-2xl hover:-translate-y-1">
+                <div className="p-8">
+                  <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Car className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#0a0e2e] mb-3">Auto Detailing</h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    Hand wash, interior deep clean, paint correction, ceramic coating, and engine bay detailing
+                  </p>
+                  <ul className="space-y-3 mb-6">
+                    <li className="flex items-start gap-2 text-gray-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Premium hand wash & wax</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-gray-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Deep interior cleaning</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-gray-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Paint correction available</span>
+                    </li>
+                  </ul>
+                  <a
+                    href="#quote"
+                    className="inline-flex items-center gap-2 bg-[#0a0e2e] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#151a42] transition-all duration-300 shadow-md hover:shadow-xl group"
+                  >
+                    <span>Request Quote</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Boat Detailing */}
+              <div className="bg-white rounded-2xl border-2 border-gray-200 hover:border-[#0a0e2e] transition-all duration-300 overflow-hidden group hover:shadow-2xl hover:-translate-y-1">
+                <div className="p-8">
+                  <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Ship className="w-8 h-8 text-teal-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#0a0e2e] mb-3">Boat Detailing</h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    Hull cleaning, deck restoration, oxidation removal, and marine-grade protection treatments
+                  </p>
+                  <ul className="space-y-3 mb-6">
+                    <li className="flex items-start gap-2 text-gray-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Hull cleaning & waxing</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-gray-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Deck & upholstery care</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-gray-700">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Metal polishing & protection</span>
+                    </li>
+                  </ul>
+                  <a
+                    href="#quote"
+                    className="inline-flex items-center gap-2 bg-[#0a0e2e] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#151a42] transition-all duration-300 shadow-md hover:shadow-xl group"
+                  >
+                    <span>Request Quote</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Custom Projects */}
+              <div className="bg-gradient-to-br from-[#0a0e2e] to-[#1b1f4a] text-white rounded-2xl border-2 border-[#1e245a] transition-all duration-300 overflow-hidden group hover:shadow-2xl hover:-translate-y-1">
+                <div className="p-8">
+                  <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Car className="w-8 h-8 text-[#74dbff]" />
+                  </div>
+                  <h3 className="text-3xl font-bold mb-3">We Detail Anything</h3>
+                  <p className="text-white/80 mb-6 leading-relaxed">
+                    Boat, car, RV, fleet, aircraft, or something one-of-a-kind—we build bespoke detailing plans for every vehicle. Tell us what you have and how you use it; we&apos;ll take it from there.
+                  </p>
+                  <ul className="space-y-3 mb-6 text-white/80">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#74dbff] flex-shrink-0 mt-0.5" />
+                      <span>Send photos or a quick description of your project</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#74dbff] flex-shrink-0 mt-0.5" />
+                      <span>We schedule a walkthrough or virtual consultation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="w-5 h-5 text-[#74dbff] flex-shrink-0 mt-0.5" />
+                      <span>Receive a tailored quote and care plan within 24 hours</span>
+                    </li>
+                  </ul>
+                  <div className="flex flex-wrap gap-3">
+                    <a
+                      href="#quote"
+                      className="inline-flex items-center gap-2 bg-[#74dbff] text-[#07102f] px-6 py-3 rounded-lg font-semibold hover:bg-[#8ae2ff] transition-all duration-300 shadow-md hover:shadow-xl group"
+                    >
+                      <span>Request a Custom Quote</span>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </a>
+                    <a
+                      href="mailto:starttdetailing@gmail.com"
+                      className="inline-flex items-center gap-2 border border-white/30 text-white px-6 py-3 rounded-lg font-semibold hover:border-white hover:bg-white/10 transition-all duration-300"
+                    >
+                      <Mail className="w-5 h-5" />
+                      <span>Message Our Team</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div className="p-6">
-                <div className="text-4xl font-bold text-[#0a0e2e] mb-2">500+</div>
-                <div className="text-gray-600">Vehicles Detailed</div>
-              </div>
-              <div className="p-6">
-                <div className="text-4xl font-bold text-[#0a0e2e] mb-2">5 Star</div>
-                <div className="text-gray-600">Average Rating</div>
-              </div>
-              <div className="p-6">
-                <div className="text-4xl font-bold text-[#0a0e2e] mb-2">100%</div>
-                <div className="text-gray-600">Satisfaction Rate</div>
+          {/* Maintenance Plans Banner */}
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-gradient-to-r from-gray-100 to-gray-50 rounded-2xl p-8 md:p-10 border-2 border-gray-200 relative overflow-hidden group hover:border-[#0a0e2e] transition-all duration-300">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-[#0a0e2e]/5 rounded-full -mr-48 -mt-48 group-hover:scale-110 transition-transform duration-700"></div>
+              
+              <div className="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <div className="inline-block bg-[#0a0e2e] text-white px-4 py-2 rounded-full text-sm font-bold mb-4">
+                    ⚡ Premium Service
+                  </div>
+                  <h3 className="text-3xl font-bold text-[#0a0e2e] mb-4">
+                    Weekly & Bi-Weekly Maintenance Plans
+                  </h3>
+                  <p className="text-gray-700 text-lg leading-relaxed mb-6">
+                    Keep your car, boat, or RV spotless year-round with flexible mobile service. Perfect for marina owners and vehicle enthusiasts who demand excellence.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <a
+                      href="#quote"
+                      className="inline-flex items-center gap-2 bg-[#0a0e2e] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#151a42] transition-all duration-300 shadow-md hover:shadow-xl"
+                    >
+                      <span>Get Maintenance Quote</span>
+                      <ArrowRight className="w-5 h-5" />
+                    </a>
+                    <a
+                      href="#quote"
+                      className="inline-flex items-center gap-2 bg-white text-[#0a0e2e] border-2 border-[#0a0e2e] px-6 py-3 rounded-lg font-semibold hover:bg-[#0a0e2e] hover:text-white transition-all duration-300"
+                    >
+                      <span>Learn More</span>
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <CheckCircle className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-[#0a0e2e] mb-1">Consistent Care</div>
+                        <div className="text-gray-600 text-sm">Regular maintenance keeps your investment pristine</div>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Clock className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-[#0a0e2e] mb-1">Flexible Scheduling</div>
+                        <div className="text-gray-600 text-sm">We work around your schedule</div>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Star className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-[#0a0e2e] mb-1">Priority Service</div>
+                        <div className="text-gray-600 text-sm">Maintenance clients get priority booking</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -576,135 +959,262 @@ function App() {
                 <p className="text-lg">We'll contact you within 24 hours with your custom quote.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="bg-white text-[#0a0e2e] p-8 lg:p-12 rounded-2xl shadow-2xl">
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-semibold mb-2">Full Name *</label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
+              <form onSubmit={handleSubmit} className="relative overflow-hidden rounded-3xl bg-white/95 text-[#0a0e2e] shadow-2xl">
+                <div className="pointer-events-none absolute -top-28 -right-20 h-56 w-56 rounded-full bg-[#74dbff]/25 blur-3xl"></div>
+                <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[#0a0e2e]/10 blur-3xl"></div>
+                <div className="relative z-10 p-8 lg:p-12 space-y-8">
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-600">Full Name *</label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        placeholder="First & Last Name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="makeModel" className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-600">Make & Model *</label>
+                      <input
+                        type="text"
+                        id="makeModel"
+                        name="makeModel"
+                        value={formData.makeModel}
+                        onChange={handleChange}
+                        required
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        placeholder="e.g. 2023 BMW X5 or 28' Pursuit"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label htmlFor="location" className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-600">Location *</label>
+                      <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleChange}
+                        required
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        placeholder="City, marina, or neighborhood"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="phone" className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-600">Phone Number *</label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        placeholder="(555) 123-4567"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-600">Email *</label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        placeholder="you@example.com"
+                      />
+                    </div>
+                    <div className="hidden md:flex items-center justify-center rounded-2xl border border-dashed border-[#74dbff]/50 bg-[#74dbff]/10 px-4 py-3 text-center text-sm font-medium text-[#0a0e2e]/70">
+                      Prefer updates by text or email? Let us know in the notes.
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label htmlFor="serviceDetails" className="text-xs font-semibold uppercase tracking-[0.25em] text-gray-600">Desired Service *</label>
+                    <textarea
+                      id="serviceDetails"
+                      name="serviceDetails"
+                      value={formData.serviceDetails}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#0a0e2e] focus:outline-none transition-colors"
-                      placeholder="John Smith"
+                      rows={4}
+                      className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none resize-none"
+                      placeholder="Include service goals, paint/gelcoat condition, timelines, or anything special we should prep for."
                     />
                   </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold mb-2">Phone Number *</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#0a0e2e] focus:outline-none transition-colors"
-                      placeholder="(555) 123-4567"
-                    />
-                  </div>
-                </div>
 
-                <div className="mb-6">
-                  <label htmlFor="email" className="block text-sm font-semibold mb-2">Email Address *</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-blue-900 focus:outline-none transition-colors"
-                    placeholder="john@example.com"
-                  />
-                </div>
-
-                <div className="mb-6">
-                  <label htmlFor="service" className="block text-sm font-semibold mb-2">Service Type *</label>
-                  <select
-                    id="service"
-                    name="service"
-                    value={formData.service}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#0a0e2e] focus:outline-none transition-colors bg-white"
+                  <button
+                    type="submit"
+                    className="w-full rounded-2xl bg-[#74dbff] py-4 text-lg font-semibold uppercase tracking-[0.3em] text-[#03102f] shadow-lg shadow-[#74dbff]/40 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#8ae2ff] hover:shadow-xl"
                   >
-                    <option value="car">Car Detailing</option>
-                    <option value="boat">Boat Detailing</option>
-                    <option value="both">Both Car & Boat</option>
-                  </select>
+                    Get My Free Quote
+                  </button>
                 </div>
-
-                <div className="grid md:grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <label htmlFor="make" className="block text-sm font-semibold mb-2">Make *</label>
-                    <input
-                      type="text"
-                      id="make"
-                      name="make"
-                      value={formData.make}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#0a0e2e] focus:outline-none transition-colors"
-                      placeholder="e.g., Toyota, Yamaha"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="model" className="block text-sm font-semibold mb-2">Model *</label>
-                    <input
-                      type="text"
-                      id="model"
-                      name="model"
-                      value={formData.model}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#0a0e2e] focus:outline-none transition-colors"
-                      placeholder="e.g., Camry, 242 Limited"
-                    />
-                  </div>
-                </div>
-
-                <div className="mb-6">
-                  <label htmlFor="location" className="block text-sm font-semibold mb-2">Location/Address *</label>
-                  <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#0a0e2e] focus:outline-none transition-colors"
-                    placeholder="City, State or Full Address"
-                  />
-                </div>
-
-                <div className="mb-8">
-                  <label htmlFor="message" className="block text-sm font-semibold mb-2">Additional Details</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows={4}
-                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-[#0a0e2e] focus:outline-none transition-colors resize-none"
-                    placeholder="Tell us about your vehicle's condition, preferred service date, or any specific concerns..."
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-white text-[#0a0e2e] px-8 py-5 rounded-lg font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center justify-center group"
-                >
-                  Get My Free Quote
-                  <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                </button>
-
-                <p className="text-center text-sm text-gray-500 mt-4">
-                  We respect your privacy. Your information will never be shared.
-                </p>
               </form>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-[#1a1d2e]">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+              <p className="text-xl text-gray-400">
+                Everything you need to know about our premium detailing services
+              </p>
+            </div>
+
+            {/* FAQ Items */}
+            <div className="space-y-4">
+              {/* FAQ 1 */}
+              <div className="bg-[#252837] rounded-xl overflow-hidden hover:bg-[#2a2f45] transition-all duration-300">
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-lg text-white list-none">
+                    <span>What areas do you service?</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                    <p>We provide mobile detailing services throughout Sussex County, Delaware, including Rehoboth Beach, Lewes, Bethany Beach, Dewey Beach, Ocean View, Fenwick Island, and Millsboro. Our mobile service means we come directly to your location, whether that's your home, office, or marina.</p>
+                  </div>
+                </details>
+              </div>
+
+              {/* FAQ 2 */}
+              <div className="bg-[#252837] rounded-xl overflow-hidden hover:bg-[#2a2f45] transition-all duration-300">
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-lg text-white list-none">
+                    <span>How long does a typical detailing service take?</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                    <p className="mb-3">The time varies depending on the service and vehicle size:</p>
+                    <ul className="space-y-2 ml-4">
+                      <li className="flex items-start gap-2">
+                        <span className="text-white font-semibold mt-1">•</span>
+                        <span><strong>Basic car wash & detail:</strong> 2-3 hours</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-white font-semibold mt-1">•</span>
+                        <span><strong>Full interior/exterior car detail:</strong> 4-6 hours</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-white font-semibold mt-1">•</span>
+                        <span><strong>Boat detailing:</strong> 4-8 hours (depending on size)</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-white font-semibold mt-1">•</span>
+                        <span><strong>RV detailing:</strong> 6-10 hours</span>
+                      </li>
+                    </ul>
+                  </div>
+                </details>
+              </div>
+
+              {/* FAQ 3 */}
+              <div className="bg-[#252837] rounded-xl overflow-hidden hover:bg-[#2a2f45] transition-all duration-300">
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-lg text-white list-none">
+                    <span>Do I need to provide water or electricity?</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                    <p>No! We bring everything we need, including our own water supply and power generators. Our mobile setup is completely self-contained, so you don't need to provide anything. Just give us access to your vehicle and we'll take care of the rest.</p>
+                  </div>
+                </details>
+              </div>
+
+              {/* FAQ 4 */}
+              <div className="bg-[#252837] rounded-xl overflow-hidden hover:bg-[#2a2f45] transition-all duration-300">
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-lg text-white list-none">
+                    <span>What products do you use?</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                    <p>We use only professional-grade, pH-balanced products that are safe for all surfaces and the environment. For boats, we use marine-specific products designed to protect against saltwater and UV damage. All our products are carefully selected to deliver exceptional results while protecting your vehicle's finish.</p>
+                  </div>
+                </details>
+              </div>
+
+              {/* FAQ 5 */}
+              <div className="bg-[#252837] rounded-xl overflow-hidden hover:bg-[#2a2f45] transition-all duration-300">
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-lg text-white list-none">
+                    <span>How much does detailing cost?</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                    <p>Pricing varies based on the vehicle type, size, condition, and services requested. We provide custom quotes for every job to ensure you get exactly what you need at a fair price. Request a free quote above, and we'll get back to you within 24 hours with a detailed estimate.</p>
+                  </div>
+                </details>
+              </div>
+
+              {/* FAQ 6 */}
+              <div className="bg-[#252837] rounded-xl overflow-hidden hover:bg-[#2a2f45] transition-all duration-300">
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-lg text-white list-none">
+                    <span>Do you offer maintenance packages?</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                    <p>Yes! We offer weekly and bi-weekly maintenance plans for cars, boats, and RVs. These packages are perfect for keeping your vehicle in pristine condition year-round and include priority scheduling. Maintenance clients receive special pricing and guaranteed time slots. Contact us to learn more about our maintenance programs.</p>
+                  </div>
+                </details>
+              </div>
+
+              {/* FAQ 7 */}
+              <div className="bg-[#252837] rounded-xl overflow-hidden hover:bg-[#2a2f45] transition-all duration-300">
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-lg text-white list-none">
+                    <span>Are you insured?</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                    <p>Yes, Startt Detailing is fully licensed and insured with comprehensive liability coverage. Your vehicle is protected throughout the entire detailing process. We take pride in our professionalism and maintain all necessary insurance and licensing to give you complete peace of mind.</p>
+                  </div>
+                </details>
+              </div>
+
+              {/* FAQ 8 */}
+              <div className="bg-[#252837] rounded-xl overflow-hidden hover:bg-[#2a2f45] transition-all duration-300">
+                <details className="group">
+                  <summary className="flex justify-between items-center cursor-pointer p-6 font-semibold text-lg text-white list-none">
+                    <span>What if I'm not satisfied with the service?</span>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-300 leading-relaxed">
+                    <p>We stand behind our work with a 100% satisfaction guarantee. If you're not completely happy with any aspect of our service, let us know and we'll make it right. Your satisfaction is our top priority, and we won't consider the job complete until you're thrilled with the results.</p>
+                  </div>
+                </details>
+              </div>
+            </div>
+
+            {/* Bottom CTA */}
+            <div className="mt-16 text-center">
+              <p className="text-gray-400 mb-4">Have additional questions?</p>
+              <a
+                href="#quote"
+                className="inline-flex items-center gap-2 text-white font-semibold hover:text-gray-300 transition-colors"
+              >
+                <span>Contact our team</span>
+                <ChevronRight className="w-5 h-5" />
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -756,7 +1266,7 @@ function App() {
                   <MapPin className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="text-sm text-gray-400">Location</div>
-                    <div className="font-semibold">123 Marina Drive<br />Coastal City, CA 90210</div>
+                    <div className="font-semibold">Sussex County, Delaware</div>
                   </div>
                 </div>
                 <div className="flex items-start text-gray-300">
