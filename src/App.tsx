@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Car, Ship, Phone, Mail, CheckCircle, Star, ArrowRight, MapPin, Clock, Facebook, Instagram, Twitter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Car, Truck, Caravan, Ship, Phone, Mail, CheckCircle, Star, ArrowRight, MapPin, Clock, Facebook, Instagram, ChevronLeft, ChevronRight } from 'lucide-react';
 
 
 function App() {
@@ -53,46 +53,49 @@ function App() {
     email: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setIsSubmitting(true);
+
     try {
-      // Send to Formspree (for email notifications)
-      const formspreeResponse = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      // Call Netlify Function to send SMS via Twilio
+      const response = await fetch('/.netlify/functions/send-sms', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: formData.name,
-          makeModel: formData.makeModel,
-          location: formData.location,
-          serviceDetails: formData.serviceDetails,
-          phone: formData.phone,
-          email: formData.email,
-          _subject: `New Quote Request from ${formData.name}`,
-          _replyto: formData.email
-        })
+        body: JSON.stringify(formData)
       });
 
-          if (formspreeResponse.ok) {
-            setIsSubmitted(true);
-            setTimeout(() => {
-              setIsSubmitted(false);
-              setFormData({
-                name: '',
-                makeModel: '',
-                location: '',
-                serviceDetails: '',
-                phone: '',
-                email: ''
-              });
-            }, 5000);
-          }
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to send quote request');
+      }
+
+      console.log('Quote request sent successfully:', result);
+      setIsSubmitted(true);
+      
+      // Reset form after 5 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setFormData({
+          name: '',
+          makeModel: '',
+          location: '',
+          serviceDetails: '',
+          phone: '',
+          email: ''
+        });
+      }, 5000);
+
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('There was an error submitting your quote request. Please try again or call us directly.');
+      alert('There was an error sending your request. Please try calling us directly at (302) 943-0217.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -178,7 +181,7 @@ function App() {
 
               {/* Subheading */}
               <p className="text-lg md:text-xl text-gray-400 mb-6 font-light tracking-wide uppercase">
-                Professional Detailing Services in Sussex County
+                Professional Commericial and Residential Detailing Services in Sussex County
               </p>
 
               {/* Main Headline */}
@@ -188,23 +191,11 @@ function App() {
 
               {/* Description */}
               <p className="text-base md:text-lg text-gray-300 mb-10 leading-relaxed max-w-xl">
-                Your Trusted Partner for Professional Detailing – We Detail Anything and Everything. Cars, Boats, RVs, Motorcycles, and More. Explore Affordable Solutions, Protect Your Investment, and Request a No-Obligation Quote in Just Minutes.
+                Your Trusted Partner for Professional Detailing – We Detail Anything and Everything. Boats, Cars, Aviation, RVs, Motorsports and More. We are mobile and come to you. Explore Affordable Solutions, Protect Your Investment, and Request a No-Obligation Quote in Just Minutes.
               </p>
 
               {/* Testimonial */}
-              <div className="bg-white/5 backdrop-blur-md rounded-xl p-8 border border-white/10 shadow-2xl">
-                <div className="flex items-start gap-5">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex-shrink-0 flex items-center justify-center text-white text-lg font-bold shadow-lg">
-                    MJ
-                  </div>
-                  <div>
-                    <p className="text-base md:text-lg text-gray-100 mb-4 leading-relaxed font-light">
-                      "The team at Startt Detailing transformed my boat! It looks better than the day I bought it. They're incredibly thorough and professional."
-                    </p>
-                    <p className="text-sm text-gray-400 font-semibold tracking-wide">— Michael J.</p>
-                  </div>
-                </div>
-              </div>
+
             </div>
 
             {/* Right Column - Detailing Slideshow */}
@@ -271,15 +262,15 @@ function App() {
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-[#74dbff]">
               On The Job
             </span>
-            <h2 className="mt-6 text-4xl font-bold md:text-5xl">Behind the Scenes at Startt Detailing</h2>
+            <h2 className="mt-6 text-4xl font-bold md:text-5xl">Check out some of our work!</h2>
             <p className="mt-4 text-base text-gray-300 md:text-lg">
-              See the crew in action as they restore gloss, banish salt, and protect every surface.
+              Premium detailing, proven results.
             </p>
             <div className="mt-8 grid grid-cols-2 gap-4 text-sm text-gray-200 sm:text-base">
               <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur">
                 <CheckCircle className="mb-3 h-6 w-6 text-[#74dbff]" />
                 <p className="font-semibold text-white">Signature Startt Finish</p>
-                <p className="mt-1 text-gray-300">Layered protection and mirror shine on every detail.</p>
+                <p className="mt-1 text-gray-300">We clean, shine, and protect your investment.</p>
               </div>
               <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur">
                 <Clock className="mb-3 h-6 w-6 text-[#74dbff]" />
@@ -320,11 +311,16 @@ function App() {
         <div className="container mx-auto px-6">
           {/* Header with Stats */}
           <div className="text-center mb-16">
-            <div className="flex justify-center items-center gap-2 mb-4">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-6 h-6 fill-yellow-400 text-yellow-400" />
-              ))}
-              <span className="text-2xl font-bold text-[#0a0e2e] ml-2">5/5</span>
+            <div className="flex flex-col items-center gap-3 mb-4">
+              <span className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-green-700">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                5-Star Rated on Google
+              </span>
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-6 h-6 fill-yellow-400 text-yellow-400" />
+                ))}
+              </div>
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-[#0a0e2e] mb-4">Loved by Our Customers</h2>
             <p className="text-xl text-gray-600 mb-6">See what people are saying about our detailing services</p>
@@ -467,7 +463,7 @@ function App() {
                   </div>
                   <div>
                     <div className="font-semibold text-[#0a0e2e] text-sm">Nicole DiGiacomo</div>
-                    <div className="text-xs text-gray-500">Rehoboth Beach, DE</div>
+                    <div className="text-xs text-gray-500">Kent County, DE</div>
                   </div>
                 </div>
               </div>
@@ -688,7 +684,7 @@ function App() {
               </span>
             </div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Precision detailing tailored to your lifestyle — on land and sea
+              Precision detailing tailored to your lifestyle — on land, in the air, or on the sea
             </p>
           </div>
 
@@ -703,7 +699,7 @@ function App() {
                   <div>
                     <h3 className="text-3xl font-bold mb-4">Startt Detailing</h3>
                     <p className="text-lg text-gray-200 leading-relaxed mb-6">
-                      Fully licensed and insured professionals providing mobile detailing for boats, autos, RVs, and more. Our team brings showroom-level shine right to your location.
+                      Fully licensed and insured professionals providing mobile detailing. Our team brings showroom-level shine right to your location.
                     </p>
                     <div className="flex items-center gap-2 mb-4">
                       <div className="flex">
@@ -761,25 +757,35 @@ function App() {
               {/* Auto Detailing */}
               <div className="bg-white rounded-2xl border-2 border-gray-200 hover:border-[#0a0e2e] transition-all duration-300 overflow-hidden group hover:shadow-2xl hover:-translate-y-1">
                 <div className="p-8">
-                  <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    <Car className="w-8 h-8 text-blue-600" />
+                  <div className="w-full mb-6 flex items-center justify-start gap-4">
+                    <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Car className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <div className="flex items-center gap-3 text-blue-500/80">
+                      <div className="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-blue-100 shadow-sm group-hover:scale-110 transition-transform">
+                        <Truck className="w-8 h-8 text-blue-600" />
+                      </div>
+                      <div className="inline-flex h-16 w-16 items-center justify-center rounded-xl bg-blue-100 shadow-sm group-hover:scale-110 transition-transform">
+                        <Caravan className="w-8 h-8 text-blue-600" />
+                      </div>
+                    </div>
                   </div>
                   <h3 className="text-2xl font-bold text-[#0a0e2e] mb-3">Auto Detailing</h3>
                   <p className="text-gray-600 mb-6 leading-relaxed">
-                    Hand wash, interior deep clean, paint correction, ceramic coating, and engine bay detailing
+                    Premium interior and exterior automotive detailing, protect your investment with a wax, sealant, or coating. We make your vehicle look like the day you bought it!
                   </p>
                   <ul className="space-y-3 mb-6">
                     <li className="flex items-start gap-2 text-gray-700">
                       <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>Premium hand wash & wax</span>
+                      <span>Clean</span>
                     </li>
                     <li className="flex items-start gap-2 text-gray-700">
                       <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>Deep interior cleaning</span>
+                      <span>Shine</span>
                     </li>
                     <li className="flex items-start gap-2 text-gray-700">
                       <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>Paint correction available</span>
+                      <span>Protect</span>
                     </li>
                   </ul>
                   <a
@@ -800,20 +806,20 @@ function App() {
                   </div>
                   <h3 className="text-2xl font-bold text-[#0a0e2e] mb-3">Boat Detailing</h3>
                   <p className="text-gray-600 mb-6 leading-relaxed">
-                    Hull cleaning, deck restoration, oxidation removal, and marine-grade protection treatments
+                    Based out of Sussex County Delaware, we offer premium marine detailing.
                   </p>
                   <ul className="space-y-3 mb-6">
                     <li className="flex items-start gap-2 text-gray-700">
                       <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>Hull cleaning & waxing</span>
+                      <span>Weekly & Bi-Weekly Maintenance Plans</span>
                     </li>
                     <li className="flex items-start gap-2 text-gray-700">
                       <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>Deck & upholstery care</span>
+                      <span>Wax, sealant, or ceramic packages</span>
                     </li>
                     <li className="flex items-start gap-2 text-gray-700">
                       <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span>Metal polishing & protection</span>
+                      <span>Boat restoration</span>
                     </li>
                   </ul>
                   <a
@@ -834,7 +840,7 @@ function App() {
                   </div>
                   <h3 className="text-3xl font-bold mb-3">We Detail Anything</h3>
                   <p className="text-white/80 mb-6 leading-relaxed">
-                    Boat, car, RV, fleet, aircraft, or something one-of-a-kind—we build bespoke detailing plans for every vehicle. Tell us what you have and how you use it; we&apos;ll take it from there.
+                    Boat, car, RV, fleet, aircraft, or something one-of-a-kind—we offer premium detailing plans for every vehicle. Tell us what you have and how you use it; we&apos;ll take it from there.
                   </p>
                   <ul className="space-y-3 mb-6 text-white/80">
                     <li className="flex items-start gap-2">
@@ -973,7 +979,8 @@ function App() {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        disabled={isSubmitting}
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="First & Last Name"
                       />
                     </div>
@@ -986,7 +993,8 @@ function App() {
                         value={formData.makeModel}
                         onChange={handleChange}
                         required
-                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        disabled={isSubmitting}
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="e.g. 2023 BMW X5 or 28' Pursuit"
                       />
                     </div>
@@ -1002,7 +1010,8 @@ function App() {
                         value={formData.location}
                         onChange={handleChange}
                         required
-                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        disabled={isSubmitting}
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="City, marina, or neighborhood"
                       />
                     </div>
@@ -1015,8 +1024,9 @@ function App() {
                         value={formData.phone}
                         onChange={handleChange}
                         required
-                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
-                        placeholder="(555) 123-4567"
+                        disabled={isSubmitting}
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                        placeholder="(302) 123-4567"
                       />
                     </div>
                   </div>
@@ -1031,7 +1041,8 @@ function App() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none"
+                        disabled={isSubmitting}
+                        className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                         placeholder="you@example.com"
                       />
                     </div>
@@ -1048,17 +1059,19 @@ function App() {
                       value={formData.serviceDetails}
                       onChange={handleChange}
                       required
+                      disabled={isSubmitting}
                       rows={4}
-                      className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none resize-none"
-                      placeholder="Include service goals, paint/gelcoat condition, timelines, or anything special we should prep for."
+                      className="w-full rounded-2xl border border-gray-200 bg-white/70 px-4 py-3 text-base shadow-sm transition-all focus:border-[#0a0e2e] focus:ring-2 focus:ring-[#74dbff]/60 focus:outline-none resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                      placeholder="Include service goals, condition, timelines, or anything special we should prepare for."
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full rounded-2xl bg-[#74dbff] py-4 text-lg font-semibold uppercase tracking-[0.3em] text-[#03102f] shadow-lg shadow-[#74dbff]/40 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#8ae2ff] hover:shadow-xl"
+                    disabled={isSubmitting}
+                    className="w-full rounded-2xl bg-[#74dbff] py-4 text-lg font-semibold uppercase tracking-[0.3em] text-[#03102f] shadow-lg shadow-[#74dbff]/40 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#8ae2ff] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                   >
-                    Get My Free Quote
+                    {isSubmitting ? 'Sending...' : 'Get My Free Quote'}
                   </button>
                 </div>
               </form>
@@ -1089,7 +1102,7 @@ function App() {
                     <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
                   </summary>
                   <div className="px-6 pb-6 text-gray-300 leading-relaxed">
-                    <p>We provide mobile detailing services throughout Sussex County, Delaware, including Rehoboth Beach, Lewes, Bethany Beach, Dewey Beach, Ocean View, Fenwick Island, and Millsboro. Our mobile service means we come directly to your location, whether that's your home, office, or marina.</p>
+                    <p>We provide mobile detailing services throughout Delaware, including Sussex county, Rehoboth Beach, Lewes, Bethany Beach, Dewey Beach, Ocean View, Fenwick Island, and Millsboro. Our mobile service means we come directly to your location, whether that's your home, work, or marina.</p>
                   </div>
                 </details>
               </div>
@@ -1185,7 +1198,7 @@ function App() {
                     <ChevronRight className="w-5 h-5 text-gray-400 group-open:rotate-90 transition-transform" />
                   </summary>
                   <div className="px-6 pb-6 text-gray-300 leading-relaxed">
-                    <p>Yes, Startt Detailing is fully licensed and insured with comprehensive liability coverage. Your vehicle is protected throughout the entire detailing process. We take pride in our professionalism and maintain all necessary insurance and licensing to give you complete peace of mind.</p>
+                    <p>Yes, Startt Detailing is fully licensed and insured with general liability coverage. Your vehicle is protected throughout the entire detailing process. We take pride in our professionalism and maintain all necessary insurance and licensing to give you complete peace of mind.</p>
                   </div>
                 </details>
               </div>
@@ -1273,7 +1286,7 @@ function App() {
                   <Clock className="w-5 h-5 mr-3 flex-shrink-0 mt-0.5" />
                   <div>
                     <div className="text-sm text-gray-400">Hours</div>
-                    <div className="font-semibold">Mon-Fri: 8am - 6pm<br />Sat: 9am - 4pm<br />Sun: Closed</div>
+                    <div className="font-semibold">Mon-Sunday: 24/7</div>
                   </div>
                 </div>
               </div>
@@ -1300,15 +1313,6 @@ function App() {
                   aria-label="Instagram"
                 >
                   <Instagram className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-[#0a0e2e] transition-all duration-300 transform hover:scale-110"
-                  aria-label="Twitter"
-                >
-                  <Twitter className="w-5 h-5" />
                 </a>
               </div>
               <div className="mt-6">
