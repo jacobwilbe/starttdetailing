@@ -71,6 +71,12 @@ function App() {
 
       const result = await response.json();
 
+      // Handle rate limiting (429 status)
+      if (response.status === 429) {
+        alert('⏱️ Slow down there! You can only submit 3 quote requests per hour. Please try again later or call us directly at (302) 943-0217.');
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(result.error || 'Failed to send quote request');
       }
